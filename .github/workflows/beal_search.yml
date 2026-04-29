@@ -1,14 +1,18 @@
 name: Beal Search Daily
 
 on:
+  push:
   schedule:
-    - cron: '0 6 * * *'   # Runs daily at 6 AM UTC
-  workflow_dispatch:        # Allows manual run from GitHub UI
+    - cron: '0 6 * * *'
+  workflow_dispatch:
+
+permissions:
+  contents: write          # 🔑 This is the key line
 
 jobs:
   search:
     runs-on: ubuntu-latest
-    timeout-minutes: 360    # 6 hours (GitHub free tier max)
+    timeout-minutes: 360
 
     steps:
       - name: Checkout repo
