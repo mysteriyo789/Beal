@@ -7,7 +7,7 @@ on:
   workflow_dispatch:
 
 permissions:
-  contents: write
+  contents: write          # 🔑 This is the key line
 
 jobs:
   search:
@@ -26,16 +26,11 @@ jobs:
       - name: Run Beal Search
         run: python beal_search.py
 
-      - name: Commit and push progress
+      - name: Commit progress
         if: always()
         run: |
           git config user.name "github-actions[bot]"
           git config user.email "github-actions[bot]@users.noreply.github.com"
           git add beal_state.json beal_results.jsonl
-          if git diff --staged --quiet; then
-            echo "No changes to commit"
-          else
-            git commit -m "Auto checkpoint: $(date -u +'%Y-%m-%d %H:%M UTC')"
-            git pull --rebase origin main
-            git push origin main
-          fi
+          git diff --staged --quiet || git commit -m "Auto checkpoint: $(date -u +'%Y-%m-%d %H:%M UTC')"
+          git push
